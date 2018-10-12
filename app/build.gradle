@@ -74,6 +74,7 @@ dependencies {
     kapt Libs.dagger2Processor
 
     testImplementation Libs.junit
+    testImplementation Libs.mockito
     androidTestImplementation Libs.runner
-    androidTestImplementation Libs.junit
+    androidTestImplementation Libs.espresso
 }

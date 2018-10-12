@@ -19,6 +19,8 @@ object Versions {
     const val room = "2.0.0"
     const val anko = "0.10.7"
     const val retrofit = "2.3.0"
+    const val material = "1.0.0"
+    const val leakcanary = "1.6.1"
     const val parceler = "1.1.6"
     const val okHttp = "3.8.0"
     const val espresso = "3.0.2"
@@ -27,8 +29,7 @@ object Versions {
     const val dagger2 = "2.12"
     const val junit = "4.12"
     const val runner = "1.0.2"
-    const val material = "1.0.0"
-    const val leakcanary = "1.6.1"
+    const val mockito = "2.23.0"
 }
 
 object LibsPrefix {
@@ -95,6 +96,7 @@ object Libs {
     const val junit = "junit:junit:${Versions.junit}"
     const val runner = "com.android.support.test:runner:${Versions.runner}"
     const val espresso = "com.android.support.test.espresso:espresso-core:${Versions.espresso}"
+    const val mockito = "org.mockito:mockito-core:${Versions.mockito}"
 }
 
 object ClassPaths {
