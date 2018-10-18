@@ -4,13 +4,12 @@ import pl.skipcode.basekotlinapp.feature.commons.BaseContract
 
 interface MainContract {
 
+    interface View : BaseContract.View
+
     interface Router : BaseContract.Router{
         fun goToAuthActivity()
     }
 
-    interface Presenter : BaseContract.Presenter {
-        fun visible()
-        fun hidden()
-    }
+    interface Presenter : BaseContract.Presenter
 
 }

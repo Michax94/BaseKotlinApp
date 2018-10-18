@@ -6,7 +6,9 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import pl.skipcode.basekotlinapp.feature.auth.module.AuthModule
 import pl.skipcode.basekotlinapp.feature.main.module.MainModule
-import pl.skipcode.basekotlinapp.feature.main.ui.AuthActivity
+import pl.skipcode.basekotlinapp.feature.auth.ui.AuthActivity
+import pl.skipcode.basekotlinapp.feature.main.fragments.dashboard.module.DashboardModule
+import pl.skipcode.basekotlinapp.feature.main.module.MainFragmentsModule
 import pl.skipcode.basekotlinapp.feature.main.ui.MainActivity
 import pl.skipcode.basekotlinapp.feature.splash.ui.SplashActivity
 import pl.skipcode.basekotlinapp.feature.splash.module.SplashModule
@@ -23,7 +25,7 @@ abstract class ActivityBinderModule {
     @ContributesAndroidInjector(modules = [AuthModule::class])
     abstract fun bindsAuthActivity(): AuthActivity
 
-    @ContributesAndroidInjector(modules = [MainModule::class])
+    @ContributesAndroidInjector(modules = [MainModule::class, MainFragmentsModule::class])
     abstract fun bindsMainActivity(): MainActivity
 
 }

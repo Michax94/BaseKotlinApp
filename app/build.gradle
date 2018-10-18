@@ -27,25 +27,31 @@ android {
         production {
             dimension "mode"
             buildConfigField "boolean", "TRY_NOT_TO_USE_SSL", "false"
-            buildConfigField "String", "PATH", "\"https://domena.pl/\""
-            buildConfigField "String", "PATH_API", "\"https://domena.pl/api/\""
+            buildConfigField "String", "PATH", "\"https://randomapi.com/api/\""
+            buildConfigField "String", "PATH_API", "\"https://randomapi.com/api/\""
         }
         staging {
             dimension "mode"
             applicationIdSuffix ".stage"
             versionNameSuffix"-stage"
             buildConfigField "boolean", "TRY_NOT_TO_USE_SSL", "false"
-            buildConfigField "String", "PATH", "\"https://domena.pl/\""
-            buildConfigField "String", "PATH_API", "\"https://domena.pl/api/\""
+            buildConfigField "String", "PATH", "\"https://randomapi.com/api/\""
+            buildConfigField "String", "PATH_API", "\"https://randomapi.com/api/\""
         }
         develop {
             dimension "mode"
             applicationIdSuffix ".develop"
             versionNameSuffix"-develop"
             buildConfigField "boolean", "TRY_NOT_TO_USE_SSL", "false"
-            buildConfigField "String", "PATH", "\"http://dev.domena.pl/\""
-            buildConfigField "String", "PATH_API", "\"http://dev.domena.pl/api/\""
+            buildConfigField "String", "PATH", "\"https://randomapi.com/api/\""
+            buildConfigField "String", "PATH_API", "\"https://randomapi.com/api/\""
         }
+    }
+    applicationVariants.all { variant ->
+        buildConfigField "String", "DATE_FORMAT", "\"yyyy-MM-dd HH:mm:ss\""
+    }
+    testOptions {
+        unitTests.returnDefaultValues = true
     }
 }
 
@@ -64,7 +70,11 @@ dependencies {
     //Leakcanary
     debugImplementation Libs.leakcanary
 
-    implementation 'com.android.support:appcompat-v7:28.0.0'
+    //Support
+    implementation Libs.appCompat
+    implementation Libs.constraintLayout
+    implementation Libs.fragment
+    implementation Libs.design
 
     //Dagger
     implementation Libs.dagger2
@@ -72,6 +82,30 @@ dependencies {
     implementation Libs.dagger2Android
     implementation Libs.dagger2AndroidSupport
     kapt Libs.dagger2Processor
+
+    //RxJava
+    implementation Libs.rxjava2RxAndroid
+    implementation Libs.rxjava2Rxjava
+    implementation Libs.rxandroid
+
+    //RxPermission
+    implementation Libs.rxPermissions
+
+    //Retrofit
+    implementation Libs.retrofit
+    implementation Libs.retrofitRxJava2
+    implementation Libs.retrofitConverterGson
+
+    //OkHttp
+    implementation Libs.okhttp3
+    implementation Libs.okhttp3Interceptor
+
+    //Hawk
+    implementation Libs.hawk
+
+    //Parceler
+    implementation Libs.parceler
+    kapt Libs.parcelerProcessor
 
     testImplementation Libs.junit
     testImplementation Libs.mockito

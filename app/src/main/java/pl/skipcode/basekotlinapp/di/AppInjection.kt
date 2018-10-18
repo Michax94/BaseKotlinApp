@@ -7,21 +7,29 @@ import dagger.Component
 import dagger.Module
 import dagger.Provides
 import dagger.android.AndroidInjectionModule
+import io.reactivex.disposables.CompositeDisposable
 import pl.skipcode.basekotlinapp.BaseApplication
+import pl.skipcode.basekotlinapp.di.modules.BaseNetworkModule
+import pl.skipcode.basekotlinapp.di.modules.NetworkModule
 import javax.inject.Singleton
 
 @Module
 class AppModule {
 
     @Provides
-    fun context(app: Application): Context =
+    fun provideContext(app: Application): Context =
             app
+
+    @Provides
+    fun provideCompositeDisposable(): CompositeDisposable = CompositeDisposable()
 }
 
 @Singleton
 @Component(modules = [
     AndroidInjectionModule::class,
     AppModule::class,
+    NetworkModule::class,
+    ConfigurationModule::class,
     ActivityBinderModule::class
 ])
 interface AppComponent {

@@ -4,13 +4,15 @@ import pl.skipcode.basekotlinapp.feature.commons.BaseContract
 
 interface SplashContract {
 
+    interface View : BaseContract.View
+
     interface Router : BaseContract.Router{
-        fun openMainActivity()
+        fun goToMainActivity()
         fun goToAuthActivity()
     }
 
     interface Presenter : BaseContract.Presenter {
         fun visible()
-        fun hidden()
+        fun hide()
     }
 }

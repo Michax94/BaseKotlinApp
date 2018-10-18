@@ -2,8 +2,11 @@ package pl.skipcode.basekotlinapp.feature.commons
 
 interface BaseContract {
 
-    interface Router {
+    interface View
 
+    interface Router {
+        fun finish()
+        fun goToSplashActivity()
     }
 
     interface Presenter {
