@@ -8,6 +8,7 @@ interface MainContract {
 
     interface Router : BaseContract.Router{
         fun goToAuthActivity()
+        fun goToAboutFragment()
     }
 
     interface Presenter : BaseContract.Presenter

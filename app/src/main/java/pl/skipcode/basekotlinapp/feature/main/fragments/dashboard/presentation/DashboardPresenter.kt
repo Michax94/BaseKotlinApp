@@ -42,6 +42,10 @@ class DashboardPresenter(
                         ))
     }
 
+    override fun openAbout() {
+        router.goToAboutFragment()
+    }
+
     override fun logoutUser() {
         configuration.logout()
         router.goToAuthActivity()

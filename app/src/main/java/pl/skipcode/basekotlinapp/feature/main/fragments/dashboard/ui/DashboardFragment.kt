@@ -41,10 +41,17 @@ class DashboardFragment : DashboardContract.View, BaseFragment(){
         btnLogout.setOnClickListener{
             clickLogout()
         }
+        tvUsername.setOnClickListener{
+            clickUsername()
+        }
     }
 
     override fun clickLogout() {
         presenter.logoutUser()
+    }
+
+    override fun clickUsername() {
+        presenter.openAbout()
     }
 
     override fun updateUsernameUI(username: String) {

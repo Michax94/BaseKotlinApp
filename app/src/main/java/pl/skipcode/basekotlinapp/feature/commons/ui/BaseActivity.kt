@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.app.Fragment
+import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
@@ -14,7 +15,7 @@ import dagger.android.support.HasSupportFragmentInjector
 import pl.skipcode.basekotlinapp.R
 import javax.inject.Inject
 
-abstract class BaseActivity: AppCompatActivity() {
+abstract class BaseActivity: AppCompatActivity(){
 
     abstract val layoutId: Int
     abstract val frameLayoutId: Int?

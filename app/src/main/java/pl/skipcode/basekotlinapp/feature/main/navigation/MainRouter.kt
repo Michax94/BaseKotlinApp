@@ -3,7 +3,10 @@ package pl.skipcode.basekotlinapp.feature.main.navigation
 import android.content.Intent
 import pl.skipcode.basekotlinapp.feature.auth.ui.AuthActivity
 import pl.skipcode.basekotlinapp.feature.commons.navigation.BaseRouter
+import pl.skipcode.basekotlinapp.feature.commons.ui.BaseActivity
 import pl.skipcode.basekotlinapp.feature.main.MainContract
+import pl.skipcode.basekotlinapp.feature.main.fragments.about.ui.AboutFragment
+import pl.skipcode.basekotlinapp.feature.main.fragments.dashboard.ui.DashboardFragment
 import pl.skipcode.basekotlinapp.feature.main.ui.MainActivity
 import timber.log.Timber
 
@@ -19,5 +22,9 @@ class MainRouter(
                 )
         )
         finish()
+    }
+
+    override fun goToAboutFragment() {
+        activity.pushFragment(AboutFragment(), BaseActivity.ANIM.FADE_IN)
     }
 }
