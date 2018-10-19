@@ -49,6 +49,7 @@ class SplashRouterTest : BaseTest() {
                         Intent.FLAG_ACTIVITY_CLEAR_TASK
                 )
         )
+        verify(activity, times(1)).finish()
     }
 
     @Test
@@ -62,6 +63,7 @@ class SplashRouterTest : BaseTest() {
                         Intent.FLAG_ACTIVITY_CLEAR_TASK
                 )
         )
+        verify(activity, times(1)).finish()
     }
 
 }

@@ -11,6 +11,7 @@ import pl.skipcode.basekotlinapp.feature.commons.ui.BaseActivity
 import pl.skipcode.basekotlinapp.feature.commons.ui.BaseFragment
 import pl.skipcode.basekotlinapp.feature.main.MainContract
 import pl.skipcode.basekotlinapp.feature.main.fragments.dashboard.DashboardContract
+import timber.log.Timber
 import javax.inject.Inject
 
 class DashboardFragment : DashboardContract.View, BaseFragment(){

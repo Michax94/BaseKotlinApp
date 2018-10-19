@@ -6,17 +6,8 @@ import pl.skipcode.basekotlinapp.utils.configuration.ConfigurationInterface
 import timber.log.Timber
 
 abstract class BasePresenter(
-        private val compositeDisposable: CompositeDisposable,
-        private val configuration: ConfigurationInterface
+        private val compositeDisposable: CompositeDisposable
 ) : BaseContract.Presenter{
-
-    override fun initialize() {
-//        compositeDisposable.add(configuration.authorizationObservable()
-//                .subscribe {
-//                    Timber.e("BasePresenter Logout = $it")
-//                    configuration.logout()
-//                })
-    }
 
     override fun clear() {
         compositeDisposable.clear()

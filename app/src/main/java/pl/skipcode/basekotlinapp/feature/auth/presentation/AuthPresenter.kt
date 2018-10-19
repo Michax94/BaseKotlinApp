@@ -26,10 +26,9 @@ class AuthPresenter(
         private val permissionHelper: PermissionsHelperInterface,
         private val compositeDisposable: CompositeDisposable,
         private val configuration: ConfigurationInterface
-) : AuthContract.Presenter, BasePresenter(compositeDisposable,configuration) {
+) : AuthContract.Presenter, BasePresenter(compositeDisposable) {
 
     override fun initialize() {
-        super.initialize()
         checkCameraPermission()
     }
 
@@ -88,7 +87,7 @@ class AuthPresenter(
                                 },
                                 {
                                     val error = ErrorHelper().getError(it)
-//                                    view.showMessage(error.message)
+                                    view.showMessage(error.message)
                                 }
                         ))
     }

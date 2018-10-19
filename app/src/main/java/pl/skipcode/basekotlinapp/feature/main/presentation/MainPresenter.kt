@@ -4,19 +4,19 @@ import io.reactivex.disposables.CompositeDisposable
 import pl.skipcode.basekotlinapp.feature.commons.presentation.BasePresenter
 import pl.skipcode.basekotlinapp.feature.main.MainContract
 import pl.skipcode.basekotlinapp.utils.configuration.ConfigurationInterface
+import timber.log.Timber
 
 class MainPresenter(
         private val router: MainContract.Router,
         private val compositeDisposable: CompositeDisposable,
         private val configuration: ConfigurationInterface
-) : MainContract.Presenter, BasePresenter(compositeDisposable,configuration) {
+) : MainContract.Presenter, BasePresenter(compositeDisposable) {
 
     override fun initialize() {
-        super.initialize()
-
         compositeDisposable.add(configuration.authorizationObservable()
                 .subscribe {
-//                    configuration.logout()
+                    Timber.e("MainPresenter logout")
+                    configuration.logout()
                     router.goToAuthActivity()
                 })
     }

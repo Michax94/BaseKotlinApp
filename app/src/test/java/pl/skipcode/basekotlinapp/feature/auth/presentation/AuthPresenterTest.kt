@@ -4,7 +4,6 @@ import android.Manifest
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
-import okhttp3.internal.http2.ErrorCode
 import org.junit.Test
 
 import org.mockito.ArgumentMatchers
@@ -15,10 +14,8 @@ import pl.skipcode.basekotlinapp.R
 import pl.skipcode.basekotlinapp.data.api.auth.LoginResponse
 import pl.skipcode.basekotlinapp.data.api.auth.Result
 import pl.skipcode.basekotlinapp.feature.auth.AuthContract
-import pl.skipcode.basekotlinapp.feature.commons.presentation.BasePresenter
 import pl.skipcode.basekotlinapp.feature.splash.BaseTest
 import pl.skipcode.basekotlinapp.utils.configuration.Configuration
-import pl.skipcode.basekotlinapp.utils.network.errors.ErrorStatus
 import pl.skipcode.basekotlinapp.utils.network.rest.ResponseExeption
 import pl.skipcode.basekotlinapp.utils.network.services.AuthService
 import pl.skipcode.basekotlinapp.utils.tools.permissions.PermissionsHelperInterface
@@ -32,7 +29,7 @@ class AuthPresenterTest : BaseTest(){
     private lateinit var router: AuthContract.Router
 
     @Mock
-    private lateinit var premissionsHelper: PermissionsHelperInterface
+    private lateinit var permissionsHelper: PermissionsHelperInterface
 
     @Mock
     private lateinit var compositeDisposable: CompositeDisposable
@@ -43,15 +40,6 @@ class AuthPresenterTest : BaseTest(){
     @Mock
     private lateinit var configuration: Configuration
 
-    @Mock
-    private lateinit var basePresenter: BasePresenter
-
-    @Mock
-    private lateinit var loginResponse: LoginResponse
-
-    @Mock
-    private lateinit var responseExeption: ResponseExeption
-
     private lateinit var presenter: AuthContract.Presenter
 
     override fun setup(){
@@ -61,7 +49,7 @@ class AuthPresenterTest : BaseTest(){
                 view,
                 router,
                 authService,
-                premissionsHelper,
+                permissionsHelper,
                 compositeDisposable,
                 configuration
         )
@@ -73,7 +61,7 @@ class AuthPresenterTest : BaseTest(){
                 view,
                 router,
                 authService,
-                premissionsHelper,
+                permissionsHelper,
                 compositeDisposable,
                 configuration
         )
@@ -82,26 +70,20 @@ class AuthPresenterTest : BaseTest(){
     private fun initialize(){
         presenter.initialize()
 
-//        verify(basePresenter, times(1)).initialize()
-//        verify(basePresenter, times(1)).initialize()
-
-//        verify(configuration, times(1)).authorizationObservable()
-
-//        verify(compositeDisposable, times(1)).add(ArgumentMatchers.any())
-        verify(premissionsHelper, times(1)).request(Manifest.permission.CAMERA)
         verify(compositeDisposable, times(1)).add(ArgumentMatchers.any())
+        verify(permissionsHelper, times(1)).request(Manifest.permission.CAMERA)
     }
 
     @Test
     fun `should subscribe for permissions changes when initialize is called`() {
-        `when`(premissionsHelper.request(Manifest.permission.CAMERA)).thenReturn(Observable.never())
+        `when`(permissionsHelper.request(Manifest.permission.CAMERA)).thenReturn(Observable.never())
 
         initialize()
     }
 
     @Test
     fun `should finish when permissions are not granted`() {
-        `when`(premissionsHelper.request(Manifest.permission.CAMERA)).thenReturn(Observable.just(false))
+        `when`(permissionsHelper.request(Manifest.permission.CAMERA)).thenReturn(Observable.just(false))
 
         initialize()
 
@@ -111,7 +93,7 @@ class AuthPresenterTest : BaseTest(){
 
     @Test
     fun `should do nothing when permissions are granted`() {
-        `when`(premissionsHelper.request(Manifest.permission.CAMERA)).thenReturn(Observable.just(true))
+        `when`(permissionsHelper.request(Manifest.permission.CAMERA)).thenReturn(Observable.just(true))
 
         initialize()
     }
@@ -136,25 +118,22 @@ class AuthPresenterTest : BaseTest(){
         verify(view, times(1)).showMessage(R.string.validate_username_too_short)
     }
 
-//    @Test
-//    fun `should show message wrong username when login request is called`() {
-//        val username = "user"
-//        val key = "K2I0-I5HG-XRQT-WNXX"
-//
-//        `when`(view.readEtUsername()).thenReturn(username)
-//        `when`(responseExeption).thenReturn(ResponseExeption(100, 401))
-//        `when`(responseExeption.errorCode).thenReturn(100)
-//        `when`(responseExeption.errorStatus).thenReturn(401)
-//        `when`(authService.loginUser(username, key)).thenReturn(Single.error(responseExeption))
-//
-//        presenter.callLogin()
-//
-//        verify(view, times(1)).readEtUsername()
-//        verify(compositeDisposable, times(1)).add(ArgumentMatchers.any())
-//        verify(authService, times(1)).loginUser(username, key)
-//        verify(configuration, times(1)).logout()
-//        verify(view, times(1)).showMessage(R.string.error_api_unauthorized)
-//    }
+    @Test
+    fun `should show message wrong username when login request is called`() {
+        val username = "user"
+        val key = "K2I0-I5HG-XRQT-WNXG"
+
+        `when`(view.readEtUsername()).thenReturn(username)
+        `when`(authService.loginUser(username, key)).thenReturn(Single.error(ResponseExeption(100,401)))
+
+        presenter.callLogin()
+
+        verify(view, times(1)).readEtUsername()
+        verify(compositeDisposable, times(1)).add(ArgumentMatchers.any())
+        verify(authService, times(1)).loginUser(username, key)
+
+        verify(view, times(1)).showMessage(R.string.error_api_unauthorized)
+    }
 
     @Test
     fun `should go to main activity when login request is called`() {
@@ -162,16 +141,16 @@ class AuthPresenterTest : BaseTest(){
         val key = "K2I0-I5HG-XRQT-WNXG"
         val token = "MDQ6VXNlcjEyOTMyMjM2"
 
-        `when`(loginResponse.results).thenReturn(listOf(Result(username, token)))
+        val loginResponseMock = LoginResponse(listOf(Result(username, token)))
+
         `when`(view.readEtUsername()).thenReturn(username)
-        `when`(authService.loginUser(username, key)).thenReturn(Single.just(loginResponse))
+        `when`(authService.loginUser(username, key)).thenReturn(Single.just(loginResponseMock))
 
         presenter.callLogin()
 
         verify(view, times(1)).readEtUsername()
         verify(compositeDisposable, times(1)).add(ArgumentMatchers.any())
         verify(authService, times(1)).loginUser(username, key)
-        verify(loginResponse, times(2)).results
         verify(configuration, times(1)).userToken = token
         verify(configuration, times(1)).userName = username
         verify(router, times(1)).goToMainActivity()

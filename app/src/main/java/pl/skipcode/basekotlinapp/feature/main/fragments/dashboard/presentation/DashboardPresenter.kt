@@ -17,11 +17,9 @@ class DashboardPresenter(
         private val compositeDisposable: CompositeDisposable,
         private val configuration: ConfigurationInterface,
         private val router: MainContract.Router
-) : DashboardContract.Presenter, BasePresenter(compositeDisposable,configuration) {
+) : DashboardContract.Presenter, BasePresenter(compositeDisposable) {
 
     override fun initialize() {
-        super.initialize()
-
         loadUser()
     }
 
