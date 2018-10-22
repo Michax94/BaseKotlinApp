@@ -9,13 +9,10 @@ import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.AppCompatActivity
 import android.widget.FrameLayout
 import dagger.android.AndroidInjection
-import dagger.android.AndroidInjector
-import dagger.android.DispatchingAndroidInjector
-import dagger.android.support.HasSupportFragmentInjector
 import pl.skipcode.basekotlinapp.R
-import javax.inject.Inject
 
-abstract class BaseActivity: AppCompatActivity(){
+
+abstract class BaseActivity: AppCompatActivity(), FragmentManager.OnBackStackChangedListener{
 
     abstract val layoutId: Int
     abstract val frameLayoutId: Int?
@@ -24,7 +21,6 @@ abstract class BaseActivity: AppCompatActivity(){
         FADE_IN, NONE
     }
 
-    private var actualFragment: Fragment? = null
     private var frameLayout: FrameLayout? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,6 +31,8 @@ abstract class BaseActivity: AppCompatActivity(){
         if(frameLayoutId != null) {
             frameLayout = findViewById(frameLayoutId!!)
         }
+
+        supportFragmentManager.addOnBackStackChangedListener { this }
     }
 
     fun <T> startActivity(
@@ -48,73 +46,54 @@ abstract class BaseActivity: AppCompatActivity(){
         startActivity(intent)
     }
 
-    fun setFragment(fragment: Fragment, animType: ANIM) {
-        if (frameLayout != null &&
-                (getActualFragment() == null || getActualFragment()?.javaClass?.name != fragment.javaClass.name)) {
-
-            val fragmentManager = supportFragmentManager
-
-            while (fragmentManager.backStackEntryCount > 0) {
-                fragmentManager.popBackStackImmediate()
-            }
-
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            setTransactionAnim(fragmentTransaction, animType)
-
-            fragmentTransaction.replace(frameLayout!!.id, fragment, fragment.javaClass.simpleName)
-            fragmentTransaction.commitAllowingStateLoss()
-            setActualFragment(fragment)
-        }
-    }
-
-
-    fun pushFragment(fragment: Fragment, animType: ANIM) {
-        if (isDestroyed) {
-            return
-        }
-
-        if (frameLayout != null &&
-                (getActualFragment() == null || getActualFragment()?.javaClass?.name != fragment.javaClass.name)) {
-
-            val fragmentManager = supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            setTransactionAnim(fragmentTransaction, animType)
-
-            fragmentTransaction.replace(frameLayout!!.id, fragment, fragment.javaClass.simpleName)
-            fragmentTransaction.addToBackStack(null)
-            fragmentTransaction.commitAllowingStateLoss()
-            setActualFragment(fragment)
-        }
-    }
-
-    fun addFragment(fragment: Fragment, animType: ANIM) {
-        if (frameLayout != null &&
-                (getActualFragment() == null || getActualFragment()?.javaClass?.name != fragment.javaClass.name)) {
-
-            val fragmentManager = supportFragmentManager
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            setTransactionAnim(fragmentTransaction, animType)
-
-            fragmentTransaction.add(frameLayout!!.id, fragment, fragment.javaClass.simpleName)
-            fragmentTransaction.addToBackStack(System.currentTimeMillis().toString() + "")
-            fragmentTransaction.commitAllowingStateLoss()
-            setActualFragment(fragment)
-        }
-    }
-
-    private fun getActualFragment(): Fragment? {
-        return actualFragment
-    }
-
-    private fun setActualFragment(fragment: Fragment?) {
-        this.actualFragment = fragment
-    }
-
-    private fun setTransactionAnim(fragmentTransaction: FragmentTransaction, animType: ANIM) {
-        when (animType) {
-            BaseActivity.ANIM.FADE_IN -> fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out,
+    private fun getAnim(animType: ANIM) : List<Int> {
+        return when (animType) {
+            ANIM.FADE_IN -> listOf(R.anim.fade_in, R.anim.fade_out,
                     R.anim.fade_in, R.anim.fade_out)
-            BaseActivity.ANIM.NONE -> return
+            ANIM.NONE -> listOf()
+        }
+    }
+
+    fun setFragment(fragment: Fragment, animType: ANIM){
+        setFragmentExt(fragment, animType)
+    }
+
+    fun addFragment(fragment: Fragment, animType: ANIM){
+        addFragmentExt(fragment, animType)
+    }
+
+    fun replaceFragment(fragment: Fragment, animType: ANIM){
+        replaceFragmentExt(fragment, animType)
+    }
+
+    private fun AppCompatActivity.setFragmentExt(fragment: Fragment, animType: ANIM){
+        if (frameLayoutId == null) return
+        while (supportFragmentManager.backStackEntryCount > 0) {
+            supportFragmentManager.popBackStackImmediate()
+        }
+        supportFragmentManager.inTransaction ({ replace(frameLayoutId!!, fragment) }, animType)
+    }
+
+    private fun AppCompatActivity.addFragmentExt(fragment: Fragment, animType: ANIM){
+        if (frameLayoutId == null) return
+        val backStateName = fragment.javaClass.name
+        supportFragmentManager.inTransaction ({ add(frameLayoutId!!, fragment).addToBackStack(backStateName) }, animType)
+    }
+
+    private fun AppCompatActivity.replaceFragmentExt(fragment: Fragment, animType: ANIM) {
+        if (frameLayoutId == null) return
+        val backStateName = fragment.javaClass.name
+        supportFragmentManager.inTransaction ({ replace(frameLayoutId!!, fragment).addToBackStack(backStateName) }, animType)
+    }
+
+    private inline fun FragmentManager.inTransaction(func: FragmentTransaction.() -> FragmentTransaction, animType: ANIM) {
+        if (animType != ANIM.NONE) {
+            beginTransaction().func().commitAllowingStateLoss()
+        }else{
+            beginTransaction()
+                    .func()
+                    .setCustomAnimations(getAnim(animType)[0], getAnim(animType)[1], getAnim(animType)[2], getAnim(animType)[3])
+                    .commitAllowingStateLoss()
         }
     }
 }

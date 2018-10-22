@@ -38,7 +38,7 @@ class MainActivity : MainContract.View, BaseActivity(), HasSupportFragmentInject
     }
 
     private fun initFragment(){
-        setFragment(DashboardFragment(), BaseActivity.ANIM.FADE_IN)
+        setFragment(DashboardFragment())
     }
 
     override fun supportFragmentInjector(): AndroidInjector<Fragment> = fragmentInjector

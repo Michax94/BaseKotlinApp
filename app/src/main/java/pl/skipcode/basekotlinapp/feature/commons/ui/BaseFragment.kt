@@ -11,6 +11,7 @@ import dagger.android.support.AndroidSupportInjection
 import pl.skipcode.basekotlinapp.R
 import pl.skipcode.basekotlinapp.feature.commons.BaseContract
 import pl.skipcode.basekotlinapp.feature.commons.presentation.BasePresenter
+import timber.log.Timber
 
 abstract class BaseFragment: Fragment(){
 

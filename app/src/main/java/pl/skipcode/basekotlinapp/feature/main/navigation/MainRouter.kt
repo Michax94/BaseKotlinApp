@@ -25,6 +25,6 @@ class MainRouter(
     }
 
     override fun goToAboutFragment() {
-        activity.pushFragment(AboutFragment(), BaseActivity.ANIM.FADE_IN)
+        activity.addFragment(AboutFragment())
     }
 }
